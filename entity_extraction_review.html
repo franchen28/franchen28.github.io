@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html><head><meta charset='utf-8'>
+<title>Entity Extraction Review ！ 52-case</title>
+<style>
+body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 20px; background: #f5f5f5; }
+h1 { color: #333; }
+.summary { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.pair { background: #fff; margin-bottom: 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; }
+.pair-header { background: #2c3e50; color: #fff; padding: 10px 16px; font-weight: 600; display: flex; justify-content: space-between; }
+.pair-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.side { padding: 12px 16px; border-right: 1px solid #eee; }
+.side:last-child { border-right: none; }
+.side-label { font-weight: 600; font-size: 13px; color: #666; text-transform: uppercase; margin-bottom: 6px; }
+.text-box { background: #f8f9fa; padding: 8px 10px; border-radius: 4px; font-size: 13px; margin-bottom: 8px; line-height: 1.4; }
+.fol-box { background: #f0f7ff; padding: 8px 10px; border-radius: 4px; font-size: 12px; font-family: monospace; margin-bottom: 8px; white-space: pre-wrap; word-break: break-all; line-height: 1.3; }
+.entity-list { margin: 0; padding: 0; list-style: none; }
+.entity-item { display: flex; gap: 8px; padding: 4px 0; font-size: 13px; border-bottom: 1px solid #f0f0f0; align-items: center; }
+.entity-text { font-weight: 600; color: #2c3e50; }
+.entity-pred { color: #7f8c8d; font-size: 11px; font-family: monospace; }
+.entity-meta { color: #95a5a6; font-size: 11px; }
+.tag { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: 600; }
+.tag-neg { background: #fee; color: #c0392b; }
+.tag-status { background: #eef; color: #2980b9; }
+.tag-literal { background: #efe; color: #27ae60; }
+.unknown { color: #e74c3c; font-size: 12px; font-style: italic; }
+</style></head><body>
+<h1>Entity Extraction Review</h1>
+<div class='summary'>
+<strong>26 pairs</strong> | 
+Bullet entities: <strong>76</strong> | 
+Simplified entities: <strong>88</strong> | 
+Total: <strong>164</strong>
+</div>
+<div class='pair'>
+<div class='pair-header'><span>pair_01 ！ Past Medical History</span><span>B: 4 entities | S: 3 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_02)</div>
+<div class='text-box'>Heart disease with blocked arteries (Coronary artery disease, CAD).</div>
+<div class='fol-box'>FORALL p:Patient ( has_disease(p, &quot;Coronary artery disease&quot;, History) &amp; has_disease(p, &quot;CAD&quot;, History) &amp; located_in(&quot;Coronary artery disease&quot;, &quot;arteries&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>Coronary artery disease</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>History</span></span></li>
+<li class='entity-item'><span class='entity-text'>CAD</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#1 <span class='tag tag-status'>History</span></span></li>
+<li class='entity-item'><span class='entity-text'>Coronary artery disease</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#2 </span></li>
+<li class='entity-item'><span class='entity-text'>arteries</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#2 </span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_01)</div>
+<div class='text-box'>Heart disease(CAD) due to narrowed blood vessels.</div>
+<div class='fol-box'>FORALL p:Patient ( has_disease(p, &quot;CAD&quot;, History) &amp; caused_by(&quot;CAD&quot;, &quot;narrowed blood vessels&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>CAD</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>History</span></span></li>
+<li class='entity-item'><span class='entity-text'>CAD</span><span class='entity-pred'>caused_by[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>narrowed blood vessels</span><span class='entity-pred'>caused_by[1]</span><span class='entity-meta'>atom#1 </span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_02 ！ Past Medical History</span><span>B: 4 entities | S: 4 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_04)</div>
+<div class='text-box'>Had a stent placed in one of his heart arteries (Left anterior descending artery, LAD) one month ago.</div>
+<div class='fol-box'>FORALL p:Patient (  undergoes_procedure(p, &quot;stent placement&quot;, History)  &amp; located_in(&quot;stent&quot;, &quot;Left anterior descending artery&quot;)  &amp; on_date(&quot;stent placement&quot;, &quot;one month ago&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>stent placement</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>History</span></span></li>
+<li class='entity-item'><span class='entity-text'>stent</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>Left anterior descending artery</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>stent placement</span><span class='entity-pred'>on_date[0]</span><span class='entity-meta'>atom#2 <span class='tag tag-literal'>lit: one month ago</span></span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_03)</div>
+<div class='text-box'>A heart stent(a device inserted inside an artery to open it) was placed in LAD(front part of the heart) artery one month ago.</div>
+<div class='fol-box'>FORALL p:Patient (  undergoes_procedure(p, &quot;stent placement&quot;, History)  &amp; located_in(&quot;stent&quot;, &quot;LAD artery&quot;)  &amp; on_date(&quot;stent placement&quot;, &quot;one month ago&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>stent placement</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>History</span></span></li>
+<li class='entity-item'><span class='entity-text'>stent</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>LAD artery</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>stent placement</span><span class='entity-pred'>on_date[0]</span><span class='entity-meta'>atom#2 <span class='tag tag-literal'>lit: one month ago</span></span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_03 ！ Past Medical History</span><span>B: 1 entities | S: 1 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_06)</div>
+<div class='text-box'>High blood pressure (Hypertension, HTN).</div>
+<div class='fol-box'>FORALL p:Patient ( has_disease(p, &quot;Hypertension&quot;, Current) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>Hypertension</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_05)</div>
+<div class='text-box'>High blood pressure(Hypertension).</div>
+<div class='fol-box'>FORALL p:Patient ( has_disease(p, &quot;Hypertension&quot;, Current) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>Hypertension</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_04 ！ Past Medical History</span><span>B: 1 entities | S: 1 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_08)</div>
+<div class='text-box'>High cholesterol.</div>
+<div class='fol-box'>FORALL p:Patient ( has_disease(p, &quot;high cholesterol&quot;, Current) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>high cholesterol</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_07)</div>
+<div class='text-box'>High blood cholesterol(Hypercholesterolemia).</div>
+<div class='fol-box'>FORALL p:Patient ( has_disease(p, &quot;Hypercholesterolemia&quot;, Current) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>Hypercholesterolemia</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_05 ！ Past Medical History</span><span>B: 1 entities | S: 1 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_10)</div>
+<div class='text-box'>Possible history of a mini-stroke (Transient ischemic attack, TIA).</div>
+<div class='fol-box'>FORALL p:Patient ( has_disease(p, &quot;Transient ischemic attack&quot;, History) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>Transient ischemic attack</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>History</span></span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_09)</div>
+<div class='text-box'>A history of a possible small stroke (TIA).</div>
+<div class='fol-box'>FORALL p:Patient ( has_disease(p, &quot;TIA&quot;, History) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>TIA</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>History</span></span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_06 ！ Past Medical History</span><span>B: 1 entities | S: 3 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_12)</div>
+<div class='text-box'>Enlarged prostate (Benign prostatic hyperplasia, BPH).</div>
+<div class='fol-box'>FORALL p:Patient ( has_disease(p, &quot;Benign prostatic hyperplasia&quot;, Current) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>Benign prostatic hyperplasia</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_11)</div>
+<div class='text-box'>The prostate (a part near the bladder) got bigger(BPH).</div>
+<div class='fol-box'>FORALL p:Patient ( has_disease(p, &quot;BPH&quot;, Current) &amp; located_in(&quot;BPH&quot;, &quot;prostate&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>BPH</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>BPH</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>prostate</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#1 </span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_07 ！ Past Medical History</span><span>B: 1 entities | S: 1 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_14)</div>
+<div class='text-box'>Herpes.</div>
+<div class='fol-box'>FORALL p:Patient ( has_disease(p, &quot;Herpes&quot;, History) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>Herpes</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>History</span></span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_13)</div>
+<div class='text-box'>Herpes virus infection.</div>
+<div class='fol-box'>FORALL p:Patient ( has_disease(p, &quot;Herpes virus infection&quot;, Current) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>Herpes virus infection</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_08 ！ Past Medical History</span><span>B: 5 entities | S: 5 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_16)</div>
+<div class='text-box'>Surgery to clear blockage in a neck artery (Left carotid endarterectomy, CEA).</div>
+<div class='fol-box'>FORALL p:Patient (  undergoes_procedure(p, &quot;carotid endarterectomy&quot;, Current)  &amp; located_in(&quot;carotid endarterectomy&quot;, &quot;neck artery&quot;)  &amp; located_in(&quot;carotid endarterectomy&quot;, &quot;Left carotid artery&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>carotid endarterectomy</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>carotid endarterectomy</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>neck artery</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>carotid endarterectomy</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#2 </span></li>
+<li class='entity-item'><span class='entity-text'>Left carotid artery</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#2 </span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_15)</div>
+<div class='text-box'>Did surgery on the left side of the neck to clean out blockage in the vessel(L CEA).</div>
+<div class='fol-box'>FORALL p:Patient (  undergoes_procedure(p, &quot;carotid endarterectomy&quot;, Current)  &amp; located_in(&quot;carotid endarterectomy&quot;, &quot;left side of the neck&quot;)  &amp; reason_for(&quot;carotid endarterectomy&quot;, &quot;blockage in the vessel&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>carotid endarterectomy</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>carotid endarterectomy</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>left side of the neck</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>carotid endarterectomy</span><span class='entity-pred'>reason_for[0]</span><span class='entity-meta'>atom#2 </span></li>
+<li class='entity-item'><span class='entity-text'>blockage in the vessel</span><span class='entity-pred'>reason_for[1]</span><span class='entity-meta'>atom#2 </span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_09 ！ Past Medical History</span><span>B: 4 entities | S: 4 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_18)</div>
+<div class='text-box'>Removal of one testicle at age 16 due to injury (Orchiectomy).</div>
+<div class='fol-box'>FORALL p:Patient (  undergoes_procedure(p, &quot;orchiectomy&quot;, History)  &amp; on_date(&quot;orchiectomy&quot;, &quot;age 16&quot;)  &amp; caused_by(&quot;orchiectomy&quot;, &quot;injury&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>orchiectomy</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>History</span></span></li>
+<li class='entity-item'><span class='entity-text'>orchiectomy</span><span class='entity-pred'>on_date[0]</span><span class='entity-meta'>atom#1 <span class='tag tag-literal'>lit: age 16</span></span></li>
+<li class='entity-item'><span class='entity-text'>orchiectomy</span><span class='entity-pred'>caused_by[0]</span><span class='entity-meta'>atom#2 </span></li>
+<li class='entity-item'><span class='entity-text'>injury</span><span class='entity-pred'>caused_by[1]</span><span class='entity-meta'>atom#2 </span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_17)</div>
+<div class='text-box'>One testicle was removed on 16 because of an injury.</div>
+<div class='fol-box'>FORALL p:Patient (  undergoes_procedure(p, &quot;orchiectomy&quot;, Current)  &amp; on_date(&quot;orchiectomy&quot;, &quot;16&quot;)  &amp; caused_by(&quot;orchiectomy&quot;, &quot;injury&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>orchiectomy</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>orchiectomy</span><span class='entity-pred'>on_date[0]</span><span class='entity-meta'>atom#1 <span class='tag tag-literal'>lit: 16</span></span></li>
+<li class='entity-item'><span class='entity-text'>orchiectomy</span><span class='entity-pred'>caused_by[0]</span><span class='entity-meta'>atom#2 </span></li>
+<li class='entity-item'><span class='entity-text'>injury</span><span class='entity-pred'>caused_by[1]</span><span class='entity-meta'>atom#2 </span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_10 ！ Past Medical History</span><span>B: 3 entities | S: 3 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_20)</div>
+<div class='text-box'>Past injury to right arm.</div>
+<div class='fol-box'>FORALL p:Patient ( has_disease(p, &quot;injury&quot;, History) &amp; located_in(&quot;injury&quot;, &quot;right arm&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>injury</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>History</span></span></li>
+<li class='entity-item'><span class='entity-text'>injury</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>right arm</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#1 </span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_19)</div>
+<div class='text-box'>Right arm injury in the past.</div>
+<div class='fol-box'>FORALL p:Patient ( has_disease(p, &quot;arm injury&quot;, History) &amp; located_in(&quot;arm injury&quot;, &quot;right arm&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>arm injury</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>History</span></span></li>
+<li class='entity-item'><span class='entity-text'>arm injury</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>right arm</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#1 </span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_11 ！ Past Medical History</span><span>B: 3 entities | S: 4 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_22)</div>
+<div class='text-box'>Cataract surgery on both eyes.</div>
+<div class='fol-box'>FORALL p:Patient ( undergoes_procedure(p, &quot;cataract surgery&quot;, History) &amp; located_in(&quot;cataract surgery&quot;, &quot;both eyes&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>cataract surgery</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>History</span></span></li>
+<li class='entity-item'><span class='entity-text'>cataract surgery</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>both eyes</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#1 </span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_21)</div>
+<div class='text-box'>Surgery on both eyes to help him see better(bilateral cataract surgery).</div>
+<div class='fol-box'>FORALL p:Patient (  undergoes_procedure(p, &quot;bilateral cataract surgery&quot;, Current)  &amp; has_disease(p, &quot;bilateral cataract&quot;, Current)  &amp; reason_for(&quot;bilateral cataract surgery&quot;, &quot;to help him see better&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>bilateral cataract surgery</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>bilateral cataract</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#1 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>bilateral cataract surgery</span><span class='entity-pred'>reason_for[0]</span><span class='entity-meta'>atom#2 </span></li>
+<li class='entity-item'><span class='entity-text'>to help him see better</span><span class='entity-pred'>reason_for[1]</span><span class='entity-meta'>atom#2 </span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_12 ！ Presentation</span><span>B: 3 entities | S: 7 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_24)</div>
+<div class='text-box'>Ongoing chest pain after a heart procedure done one month ago.</div>
+<div class='fol-box'>FORALL p:Patient ( has_symptom(p, &quot;chest pain&quot;, Current) &amp; undergoes_procedure(p, &quot;heart procedure&quot;, History) &amp; on_date(&quot;heart procedure&quot;, &quot;one month ago&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>chest pain</span><span class='entity-pred'>has_symptom[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>heart procedure</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#1 <span class='tag tag-status'>History</span></span></li>
+<li class='entity-item'><span class='entity-text'>heart procedure</span><span class='entity-pred'>on_date[0]</span><span class='entity-meta'>atom#2 <span class='tag tag-literal'>lit: one month ago</span></span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_23)</div>
+<div class='text-box'>Persistent chest pains after prior open-heart artery surgery(LAD stent).</div>
+<div class='fol-box'>FORALL p:Patient (  has_symptom(p, &quot;chest pains&quot;, Current)  &amp; undergoes_procedure(p, &quot;open-heart surgery&quot;, History)  &amp; located_in(&quot;LAD stent&quot;, &quot;artery&quot;)  &amp; has_disease(p, &quot;persistent chest pains after prior open-heart artery surgery&quot;, Current)  &amp; caused_by(&quot;persistent chest pains&quot;, &quot;prior open-heart artery surgery&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>chest pains</span><span class='entity-pred'>has_symptom[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>open-heart surgery</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#1 <span class='tag tag-status'>History</span></span></li>
+<li class='entity-item'><span class='entity-text'>LAD stent</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#2 </span></li>
+<li class='entity-item'><span class='entity-text'>artery</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#2 </span></li>
+<li class='entity-item'><span class='entity-text'>persistent chest pains after prior open-heart artery surgery</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#3 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>persistent chest pains</span><span class='entity-pred'>caused_by[0]</span><span class='entity-meta'>atom#4 </span></li>
+<li class='entity-item'><span class='entity-text'>prior open-heart artery surgery</span><span class='entity-pred'>caused_by[1]</span><span class='entity-meta'>atom#4 </span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_13 ！ Hospital Course</span><span>B: 8 entities | S: 5 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_26)</div>
+<div class='text-box'>Patient came to the hospital with ongoing chest pain and was taken to the heart catheterization lab for a procedure to open blocked heart arteries: Left anterior descending artery (LAD). Right coronary artery (RCA).</div>
+<div class='fol-box'>FORALL p:Patient (  has_symptom(p, &quot;chest pain&quot;, Current)  &amp; admitted_to(p, &quot;hospital&quot;, Current)  &amp; undergoes_procedure(p, &quot;heart catheterization&quot;, Current)  &amp; has_disease(p, &quot;blocked heart arteries&quot;, Current)  &amp; located_in(&quot;blocked heart arteries&quot;, &quot;Left anterior descending artery&quot;)  &amp; located_in(&quot;blocked heart arteries&quot;, &quot;Right coronary artery&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>chest pain</span><span class='entity-pred'>has_symptom[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>hospital</span><span class='entity-pred'>admitted_to[1]</span><span class='entity-meta'>atom#1 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>heart catheterization</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#2 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>blocked heart arteries</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#3 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>blocked heart arteries</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#4 </span></li>
+<li class='entity-item'><span class='entity-text'>Left anterior descending artery</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#4 </span></li>
+<li class='entity-item'><span class='entity-text'>blocked heart arteries</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#5 </span></li>
+<li class='entity-item'><span class='entity-text'>Right coronary artery</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#5 </span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_25)</div>
+<div class='text-box'>Brought back to the catheterization lab to check the arteries(RCA &amp; LAD).</div>
+<div class='fol-box'>FORALL p:Patient (  undergoes_procedure(p, &quot;catheterization&quot;, Current)  &amp; located_in(&quot;catheterization&quot;, &quot;RCA&quot;)  &amp; located_in(&quot;catheterization&quot;, &quot;LAD&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>catheterization</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>catheterization</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>RCA</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>catheterization</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#2 </span></li>
+<li class='entity-item'><span class='entity-text'>LAD</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#2 </span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_14 ！ Hospital Course</span><span>B: 1 entities | S: 2 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_28)</div>
+<div class='text-box'>During the procedure:</div>
+<div class='fol-box'>FORALL p:Patient ( undergoes_procedure(p, &quot;procedure&quot;, Current) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>procedure</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_27)</div>
+<div class='text-box'>During the catheterization surgery:</div>
+<div class='fol-box'>FORALL p:Patient ( undergoes_procedure(p, &quot;catheterization&quot;, Current) &amp; undergoes_procedure(p, &quot;surgery&quot;, Current) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>catheterization</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>surgery</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#1 <span class='tag tag-status'>Current</span></span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_15 ！ Hospital Course</span><span>B: 5 entities | S: 5 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_30)</div>
+<div class='text-box'>A clot formed in two major heart arteries (Left main coronary artery, LMCA, and LAD).</div>
+<div class='fol-box'>FORALL p:Patient (  has_disease(p, &quot;clot&quot;, Current)  &amp; located_in(&quot;clot&quot;, &quot;Left main coronary artery&quot;)  &amp; located_in(&quot;clot&quot;, &quot;LAD&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>clot</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>clot</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>Left main coronary artery</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>clot</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#2 </span></li>
+<li class='entity-item'><span class='entity-text'>LAD</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#2 </span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_29)</div>
+<div class='text-box'>Developed a blood clot (thrombus) in two major heart arteries！the left main and left anterior descending artery.</div>
+<div class='fol-box'>FORALL p:Patient (  has_disease(p, &quot;thrombus&quot;, Current)  &amp; located_in(&quot;thrombus&quot;, &quot;left main artery&quot;)  &amp; located_in(&quot;thrombus&quot;, &quot;left anterior descending artery&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>thrombus</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>thrombus</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>left main artery</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>thrombus</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#2 </span></li>
+<li class='entity-item'><span class='entity-text'>left anterior descending artery</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#2 </span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_16 ！ Hospital Course</span><span>B: 2 entities | S: 4 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_32)</div>
+<div class='text-box'>The patient's heart started beating dangerously fast (ventricular tachycardia) and then stopped (cardiac arrest).</div>
+<div class='fol-box'>FORALL p:Patient ( has_disease(p, &quot;ventricular tachycardia&quot;, Current) &amp; has_disease(p, &quot;cardiac arrest&quot;, Current) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>ventricular tachycardia</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>cardiac arrest</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#1 <span class='tag tag-status'>Current</span></span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_31)</div>
+<div class='text-box'>His heart beat too fast(ventricular tachycardia), which then led to a stop(cardiac arrest).</div>
+<div class='fol-box'>FORALL p:Patient ( has_disease(p, &quot;ventricular tachycardia&quot;, Current) &amp; caused_by(&quot;cardiac arrest&quot;, &quot;ventricular tachycardia&quot;) &amp; has_disease(p, &quot;cardiac arrest&quot;, Current) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>ventricular tachycardia</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>cardiac arrest</span><span class='entity-pred'>caused_by[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>ventricular tachycardia</span><span class='entity-pred'>caused_by[1]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>cardiac arrest</span><span class='entity-pred'>has_disease[1]</span><span class='entity-meta'>atom#2 <span class='tag tag-status'>Current</span></span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_17 ！ Hospital Course</span><span>B: 3 entities | S: 1 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_34)</div>
+<div class='text-box'>CPR (chest compressions) was started to try to save him.</div>
+<div class='fol-box'>FORALL p:Patient ( undergoes_procedure(p, &quot;CPR&quot;, Current) &amp; reason_for(&quot;CPR&quot;, &quot;to try to save him&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>CPR</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>CPR</span><span class='entity-pred'>reason_for[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>to try to save him</span><span class='entity-pred'>reason_for[1]</span><span class='entity-meta'>atom#1 </span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_33)</div>
+<div class='text-box'>Chest compression initiated. </div>
+<div class='fol-box'>FORALL p:Patient ( undergoes_procedure(p, &quot;chest compression&quot;, Current) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>chest compression</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_18 ！ Hospital Course</span><span>B: 2 entities | S: 4 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_36)</div>
+<div class='text-box'>Heart surgeons (Cardiothoracic surgery or CT surgery team) were called for emergency help.</div>
+<div class='fol-box'>FORALL p:Patient (  has_examination(p, &quot;Cardiothoracic surgery consultation&quot;, Current)  &amp; admitted_to(p, &quot;emergency&quot;, Current) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>Cardiothoracic surgery consultation</span><span class='entity-pred'>has_examination[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>emergency</span><span class='entity-pred'>admitted_to[1]</span><span class='entity-meta'>atom#1 <span class='tag tag-status'>Current</span></span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_35)</div>
+<div class='text-box'>The heart surgery team set up a machine that supports the heart and lungs (ECMO):</div>
+<div class='fol-box'>FORALL p:Patient (  undergoes_procedure(p, &quot;heart surgery&quot;, Current)  &amp; uses_device(p, &quot;ECMO&quot;, Current)  &amp; located_in(&quot;ECMO&quot;, &quot;heart and lungs&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>heart surgery</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>ECMO</span><span class='entity-pred'>uses_device[1]</span><span class='entity-meta'>atom#1 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>ECMO</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#2 </span></li>
+<li class='entity-item'><span class='entity-text'>heart and lungs</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#2 </span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_19 ！ Hospital Course</span><span>B: 5 entities | S: 6 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_38)</div>
+<div class='text-box'>A large tube (cannula) was placed into the right femoral artery (an artery in the leg).</div>
+<div class='fol-box'>FORALL p:Patient (  undergoes_procedure(p, &quot;cannula placement&quot;, Current)  &amp; located_in(&quot;cannula&quot;, &quot;right femoral artery&quot;)  &amp; located_in(&quot;right femoral artery&quot;, &quot;leg&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>cannula placement</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>cannula</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>right femoral artery</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>right femoral artery</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#2 </span></li>
+<li class='entity-item'><span class='entity-text'>leg</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#2 </span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_37)</div>
+<div class='text-box'>Inserted a 15-French tube in the right leg artery through the skin.</div>
+<div class='fol-box'>FORALL p:Patient (  undergoes_procedure(p, &quot;insertion of tube&quot;, Current)  &amp; located_in(&quot;tube&quot;, &quot;right leg artery&quot;)  &amp; has_value(&quot;tube&quot;, &quot;15-French&quot;)  &amp; located_in(&quot;insertion of tube&quot;, &quot;skin&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>insertion of tube</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>tube</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>right leg artery</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>tube</span><span class='entity-pred'>has_value[0]</span><span class='entity-meta'>atom#2 <span class='tag tag-literal'>lit: 15-French</span></span></li>
+<li class='entity-item'><span class='entity-text'>insertion of tube</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#3 </span></li>
+<li class='entity-item'><span class='entity-text'>skin</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#3 </span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_20 ！ Hospital Course</span><span>B: 5 entities | S: 5 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_40)</div>
+<div class='text-box'>Another tube was placed into the right femoral vein (a vein in the leg).</div>
+<div class='fol-box'>FORALL p:Patient ( undergoes_procedure(p, &quot;tube placement&quot;, Current) &amp; located_in(&quot;tube&quot;, &quot;right femoral vein&quot;) &amp; located_in(&quot;right femoral vein&quot;, &quot;leg&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>tube placement</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>tube</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>right femoral vein</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>right femoral vein</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#2 </span></li>
+<li class='entity-item'><span class='entity-text'>leg</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#2 </span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_39)</div>
+<div class='text-box'>Insert a 24-French tube into the right leg vein through the skin.</div>
+<div class='fol-box'>FORALL p:Patient (  undergoes_procedure(p, &quot;insertion of tube&quot;, Current)  &amp; located_in(&quot;tube&quot;, &quot;right leg vein&quot;)  &amp; located_in(&quot;insertion of tube&quot;, &quot;skin&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>insertion of tube</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>tube</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>right leg vein</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>insertion of tube</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#2 </span></li>
+<li class='entity-item'><span class='entity-text'>skin</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#2 </span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_21 ！ Hospital Course</span><span>B: 3 entities | S: 4 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_42)</div>
+<div class='text-box'>The ECMO machine was turned on, and CPR was stopped.</div>
+<div class='fol-box'>FORALL p:Patient ( uses_device(p, &quot;ECMO machine&quot;, Current) &amp; has_symptom(p, &quot;turned&quot;, Current) &amp; undergoes_procedure(p, &quot;CPR&quot;, Discontinued) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>ECMO machine</span><span class='entity-pred'>uses_device[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>turned</span><span class='entity-pred'>has_symptom[1]</span><span class='entity-meta'>atom#1 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>CPR</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#2 <span class='tag tag-status'>Discontinued</span></span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_41)</div>
+<div class='text-box'>ECMO(a machine that supports the heart and lungs) was set up successfully, and chest compression stopped.</div>
+<div class='fol-box'>FORALL p:Patient (  uses_device(p, &quot;ECMO&quot;, Current)  &amp; reason_for(&quot;ECMO&quot;, &quot;supports the heart and lungs&quot;)  &amp; has_examination(p, &quot;chest compression&quot;, Discontinued) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>ECMO</span><span class='entity-pred'>uses_device[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>ECMO</span><span class='entity-pred'>reason_for[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>supports the heart and lungs</span><span class='entity-pred'>reason_for[1]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>chest compression</span><span class='entity-pred'>has_examination[1]</span><span class='entity-meta'>atom#2 <span class='tag tag-status'>Discontinued</span></span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_22 ！ Hospital Course</span><span>B: 2 entities | S: 4 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_44)</div>
+<div class='text-box'>The patient was rushed to the operating room (OR) for heart surgery:</div>
+<div class='fol-box'>FORALL p:Patient ( admitted_to(p, &quot;operating room&quot;, Current) &amp; undergoes_procedure(p, &quot;heart surgery&quot;, Current) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>operating room</span><span class='entity-pred'>admitted_to[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>heart surgery</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#1 <span class='tag tag-status'>Current</span></span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_43)</div>
+<div class='text-box'>Rush the patient to the operating room for open-heart surgery.</div>
+<div class='fol-box'>FORALL p:Patient ( admitted_to(p, &quot;operating room&quot;, Current) &amp; undergoes_procedure(p, &quot;open-heart surgery&quot;, Current) &amp; reason_for(&quot;open-heart surgery&quot;, &quot;urgency&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>operating room</span><span class='entity-pred'>admitted_to[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>open-heart surgery</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#1 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>open-heart surgery</span><span class='entity-pred'>reason_for[0]</span><span class='entity-meta'>atom#2 </span></li>
+<li class='entity-item'><span class='entity-text'>urgency</span><span class='entity-pred'>reason_for[1]</span><span class='entity-meta'>atom#2 </span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_23 ！ Hospital Course</span><span>B: 3 entities | S: 3 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_46)</div>
+<div class='text-box'>Bypass surgery to improve blood flow in the heart (Coronary artery bypass grafting, CABG).</div>
+<div class='fol-box'>FORALL p:Patient (  undergoes_procedure(p, &quot;Coronary artery bypass grafting&quot;, Current)  &amp; reason_for(&quot;Coronary artery bypass grafting&quot;, &quot;improve blood flow in the heart&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>Coronary artery bypass grafting</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>Coronary artery bypass grafting</span><span class='entity-pred'>reason_for[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>improve blood flow in the heart</span><span class='entity-pred'>reason_for[1]</span><span class='entity-meta'>atom#1 </span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_45)</div>
+<div class='text-box'>Heart bypass surgery (CABG) to improve blood flow to her heart.</div>
+<div class='fol-box'>FORALL p:Patient (  undergoes_procedure(p, &quot;CABG&quot;, Current)  &amp; reason_for(&quot;CABG&quot;, &quot;improve blood flow to her heart&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>CABG</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>CABG</span><span class='entity-pred'>reason_for[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>improve blood flow to her heart</span><span class='entity-pred'>reason_for[1]</span><span class='entity-meta'>atom#1 </span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_24 ！ Hospital Course</span><span>B: 3 entities | S: 3 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_48)</div>
+<div class='text-box'>Possible placement of a heart pump (Left ventricular assist device, LVAD) to support his heart.</div>
+<div class='fol-box'>FORALL p:Patient ( undergoes_procedure(p, &quot;placement of Left ventricular assist device&quot;, Planned) &amp; located_in(&quot;Left ventricular assist device&quot;, &quot;heart&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>placement of Left ventricular assist device</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Planned</span></span></li>
+<li class='entity-item'><span class='entity-text'>Left ventricular assist device</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>heart</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#1 </span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_47)</div>
+<div class='text-box'>Inserted a device to help his left heart pump.</div>
+<div class='fol-box'>FORALL p:Patient ( uses_device(p, &quot;left heart pump&quot;, Current) &amp; located_in(&quot;left heart pump&quot;, &quot;left heart&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>left heart pump</span><span class='entity-pred'>uses_device[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>left heart pump</span><span class='entity-pred'>located_in[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>left heart</span><span class='entity-pred'>located_in[1]</span><span class='entity-meta'>atom#1 </span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_25 ！ Management</span><span>B: 2 entities | S: 4 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_50)</div>
+<div class='text-box'>After talking with the patient's family, a decision was made to stop aggressive treatments and focus on comfort care.</div>
+<div class='fol-box'>FORALL p:Patient (  has_symptom(p, &quot;aggressive treatments&quot;, Discontinued)  &amp; undergoes_procedure(p, &quot;comfort care&quot;, Current) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>aggressive treatments</span><span class='entity-pred'>has_symptom[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Discontinued</span></span></li>
+<li class='entity-item'><span class='entity-text'>comfort care</span><span class='entity-pred'>undergoes_procedure[1]</span><span class='entity-meta'>atom#1 <span class='tag tag-status'>Current</span></span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_49)</div>
+<div class='text-box'>After speaking with the patient's family, they decide to make patient confort only.</div>
+<div class='fol-box'>FORALL p:Patient (  has_appointment(p, &quot;family meeting&quot;, Current)  &amp; reason_for(&quot;comfort measures&quot;, &quot;patient's condition&quot;)  &amp; takes_medication(p, &quot;comfort measures&quot;, Planned) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>family meeting</span><span class='entity-pred'>has_appointment[1]</span><span class='entity-meta'>atom#0 <span class='tag tag-status'>Current</span></span></li>
+<li class='entity-item'><span class='entity-text'>comfort measures</span><span class='entity-pred'>reason_for[0]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>patient's condition</span><span class='entity-pred'>reason_for[1]</span><span class='entity-meta'>atom#1 </span></li>
+<li class='entity-item'><span class='entity-text'>comfort measures</span><span class='entity-pred'>takes_medication[1]</span><span class='entity-meta'>atom#2 <span class='tag tag-status'>Planned</span></span></li>
+</ul>
+</div>
+</div></div>
+<div class='pair'>
+<div class='pair-header'><span>pair_26 ！ Management</span><span>B: 1 entities | S: 1 entities</span></div>
+<div class='pair-body'>
+<div class='side'>
+<div class='side-label'>Bullet (sent_52)</div>
+<div class='text-box'>The patient passed away peacefully at 2:35 PM.</div>
+<div class='fol-box'>FORALL p:Patient ( on_date(&quot;death&quot;, &quot;2:35 PM&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>death</span><span class='entity-pred'>on_date[0]</span><span class='entity-meta'>atom#0 <span class='tag tag-literal'>lit: 2:35 PM</span></span></li>
+</ul>
+</div>
+<div class='side'>
+<div class='side-label'>Simplified (sent_51)</div>
+<div class='text-box'>The patient passed away at 2:35 PM.</div>
+<div class='fol-box'>FORALL p:Patient ( on_date(&quot;death&quot;, &quot;2:35 PM&quot;) )</div>
+<ul class='entity-list'>
+<li class='entity-item'><span class='entity-text'>death</span><span class='entity-pred'>on_date[0]</span><span class='entity-meta'>atom#0 <span class='tag tag-literal'>lit: 2:35 PM</span></span></li>
+</ul>
+</div>
+</div></div>
+</body></html>
